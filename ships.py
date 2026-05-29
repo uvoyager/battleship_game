@@ -14,12 +14,12 @@ class Ship:
         self.angle=0
         width = self.cell
         height = self.cell * size
-        self.original_surface = pygame.Surface((width + 10, height + 10))
+        self.original_surface = pygame.Surface((width, height))
         self.change = self.original_surface
         self.rect = self.change.get_rect(center=(self.x, self.y))
     def draw(self):
         self.original_surface.fill('WHITE')
-        pygame.draw.rect(self.original_surface, self.color,(10, 20, self.cell, self.cell * (self.size - 1)))
+        pygame.draw.rect(self.original_surface, self.color,(10, 20, self.cell, self.cell * self.size))
         screen.blit(self.change, self.rect) # to combine to surfaces basically
     def drag(self, event):
         if event.type==pygame.MOUSEBUTTONDOWN:
@@ -54,21 +54,26 @@ class Ship:
 
     def get_cells(self):
         cells = []
-        center_x, center_y = self.rect.center
+        center_x = (self.rect.centerx - 70) // 30
+        center_y = (self.rect.centery - 70) // 30
 
         if self.angle in [0, 180]:
-            start_x = center_x // self.cell
-            start_y = (center_y - (self.size * self.cell) // 2) // self.cell
             for i in range(self.size):
-                cells.append((start_x, start_y + i))
+                cells.append((center_x, center_y + i))
 
         elif self.angle in [90, 270]:
-            start_x = (center_x - (self.size * self.cell) // 2) // self.cell
-            start_y = center_y // self.cell
             for i in range(self.size):
-                cells.append((start_x + i, start_y))
-
+                cells.append((center_x + i, center_y))
+        print(cells)
         return cells
+
+    def get_killed(self, shots):
+        ship_cells = self.get_cells()
+        shot=True
+        for cell in ship_cells:
+            if cell not in shots:
+                shot=False
+        return shot
 
 class Ship1(Ship):
     def __init__(self, x, y):
@@ -97,6 +102,7 @@ while running: # output ship
         ship.drag(event)
         ship.turn(event)
         ship.get_cells()
+        ship.get_killed(ship.get_cells())
     screen.fill((255, 255, 255)) # white screen
     ship.draw()
     pygame.display.update()
