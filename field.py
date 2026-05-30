@@ -2,9 +2,11 @@ import pygame as pg
 pg.init()
 screen = pg.display.set_mode((800, 800))
 class Field:
-    def __init__(self):
+    def __init__(self, x=70, y=70):
         self.ships = []
         self.shots = {}
+        self.x = x
+        self.y = y
     def draw(self, screen):
         for row in range(10):
             for col in range(10):
@@ -25,8 +27,8 @@ class Field:
 
     def shot(self, mouse_pos):
         mx, my = mouse_pos
-        gx = (mx - 70) // 30
-        gy = (my - 70) // 30
+        gx = (mx - self.x) // 30
+        gy = (my - self.y) // 30
         if not self.inside_board(gx, gy):
             return 'missed'
         if (gx, gy) in self.shots and self.shots[(gx, gy)] == 'killed':
