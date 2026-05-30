@@ -3,7 +3,7 @@ class Ship:
     def __init__(self, x, y, size):
         self.size = size
         self.cell = 30
-        self.color = 'BROWN'
+        self.color = 'NAVY'
         self.dragg = False
         self.offset_x = 0
         self.offset_y = 0
