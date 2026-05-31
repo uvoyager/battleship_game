@@ -10,7 +10,7 @@ class Field:
     def draw(self, screen):
         for row in range(10):
             for col in range(10):
-                rectangle = pg.Rect(70+col*30, 70+row*30, 30, 30)
+                rectangle = pg.Rect(self.x+col*30, self.y+row*30, 30, 30)
                 pg.draw.rect(screen, 'WHITE', rectangle)
                 pg.draw.rect(screen, "BLACK", rectangle, 1)
                 if (col, row) in self.shots:

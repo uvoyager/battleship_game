@@ -1,6 +1,6 @@
 import pygame as pg
-import field1
-import ships1
+import field
+import ships
 class Button:
     def __init__(self, x, y, width, height, base_colour, hover_colour, text, text_colour):
         self.rect = pg.Rect(x, y, width, height)
@@ -29,30 +29,30 @@ class Button:
 
 pg.init()
 screen = pg.display.set_mode((800, 800))
-field_p1 = field1.Field()
-ship1_1 = ships1.Ship(400, 100, 1)
-ship1_2 = ships1.Ship(480, 100, 1)
-ship1_3 = ships1.Ship(540, 100, 1)
-ship1_4 = ships1.Ship(600, 100, 1)
-ship2_1 = ships1.Ship(550, 170, 2)
-ship2_2 = ships1.Ship(500, 170, 2)
-ship2_3 = ships1.Ship(450, 170, 2)
-ship3_1 = ships1.Ship(500, 250, 3)
-ship3_2 = ships1.Ship(450, 250, 3)
-ship4_1 = ships1.Ship(550, 250, 4)
+field_p1 = field.Field()
+ship1_1 = ships.Ship(400, 100, 1)
+ship1_2 = ships.Ship(480, 100, 1)
+ship1_3 = ships.Ship(540, 100, 1)
+ship1_4 = ships.Ship(600, 100, 1)
+ship2_1 = ships.Ship(550, 170, 2)
+ship2_2 = ships.Ship(500, 170, 2)
+ship2_3 = ships.Ship(450, 170, 2)
+ship3_1 = ships.Ship(500, 250, 3)
+ship3_2 = ships.Ship(450, 250, 3)
+ship4_1 = ships.Ship(550, 250, 4)
 field_p1.ships = [ship1_1, ship1_2, ship1_3, ship1_4, ship2_1, ship2_2, ship2_3, ship3_1, ship3_2, ship4_1]
 
-field_p2 = field1.Field()
-ship21_1 = ships1.Ship(400, 100, 1)
-ship21_2 = ships1.Ship(480, 100, 1)
-ship21_3 = ships1.Ship(540, 100, 1)
-ship21_4 = ships1.Ship(600, 100, 1)
-ship22_1 = ships1.Ship(550, 170, 2)
-ship22_2 = ships1.Ship(500, 170, 2)
-ship22_3 = ships1.Ship(450, 170, 2)
-ship23_1 = ships1.Ship(500, 250, 3)
-ship23_2 = ships1.Ship(450, 250, 3)
-ship24_1 = ships1.Ship(550, 250, 4)
+field_p2 = field.Field()
+ship21_1 = ships.Ship(400, 100, 1)
+ship21_2 = ships.Ship(480, 100, 1)
+ship21_3 = ships.Ship(540, 100, 1)
+ship21_4 = ships.Ship(600, 100, 1)
+ship22_1 = ships.Ship(550, 170, 2)
+ship22_2 = ships.Ship(500, 170, 2)
+ship22_3 = ships.Ship(450, 170, 2)
+ship23_1 = ships.Ship(500, 250, 3)
+ship23_2 = ships.Ship(450, 250, 3)
+ship24_1 = ships.Ship(550, 250, 4)
 field_p2.ships = [ship21_1, ship21_2, ship21_3, ship21_4, ship22_1, ship22_2, ship22_3, ship23_1, ship23_2, ship24_1]
 
 button_to_2 = Button(300, 700, 150, 30, 'CYAN','LIGHTBLUE',
