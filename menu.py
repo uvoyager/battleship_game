@@ -2,9 +2,9 @@ import pygame
 import math
 pygame.init()
 SCREEN_WIDTH = 800
-SCREEN_HEIGHT = 600
+SCREEN_HEIGHT = 800
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-pygame.display.set_caption("Морський Бій: Атмосферне Меню")
+pygame.display.set_caption("Морський Бій")
 WHITE = (255, 255, 255)
 GRID_PURPLE = (235, 230, 250)
 DEEP_PURPLE = (90, 60, 150)
@@ -16,7 +16,7 @@ SEA_COLOR_TRANSPARENT = (65, 75, 175, 160)
 font = pygame.font.SysFont("arialblack", 45)
 btn_font = pygame.font.SysFont("arialblack", 30)
 HORIZON_Y = 340
-def draw_background():
+def draw_background(screen):
     screen.fill(WHITE)
     grid_size = 25
     for x in range(0, SCREEN_WIDTH, grid_size):
@@ -84,36 +84,9 @@ class Button:
         text_surf = btn_font.render(self.text, True, DEEP_PURPLE)
         text_rect = text_surf.get_rect(center=self.rect.center)
         surface.blit(text_surf, text_rect)
-    def check_hover(self, pos):
-        self.hover = self.rect.collidepoint(pos)
-        return self.hover
-play_btn = Button(290, 110, "ГРАТИ")
-exit_btn = Button(290, 195, "ВИХІД")
-run = True
-while run:
-    draw_background()
-    title_text = font.render("ГОЛОВНЕ МЕНЮ", True, DEEP_PURPLE)
-    screen.blit(title_text, (210, 25))
-    draw_dreadnought_front(400, HORIZON_Y + 5)
-    draw_dreadnought_side(160, HORIZON_Y + 5, False)
-    draw_dreadnought_side(640, HORIZON_Y + 5, True)
-    draw_mine(100, 470)
-    draw_mine(300, 530)
-    draw_mine(520, 500)
-    draw_mine(700, 450)
-    mouse_pos = pygame.mouse.get_pos()
-    play_btn.check_hover(mouse_pos)
-    exit_btn.check_hover(mouse_pos)
-    play_btn.draw(screen)
-    exit_btn.draw(screen)
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            run = False
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            if event.button == 1:
-                if play_btn.hover:
-                    print("Запуск гри!")
-                if exit_btn.hover:
-                    run = False
-    pygame.display.update()
-pygame.quit()
+    def is_clicked(self, event):
+        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+            if self.rect.collidepoint(event.pos):
+                return True
+            else:
+                return False
