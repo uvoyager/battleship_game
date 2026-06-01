@@ -48,3 +48,7 @@ class Field:
         if result == 'missed':
             self.shots[(gx, gy)] = 'missed'
         return result
+    def check(self):
+        if not self.ships:
+            return False
+        return all(ship.get_killed() for ship in self.ships)
