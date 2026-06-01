@@ -1,31 +1,8 @@
 import pygame as pg
 import field
 import ships
-class Button:
-    def __init__(self, x, y, width, height, base_colour, hover_colour, text, text_colour):
-        self.rect = pg.Rect(x, y, width, height)
-        self.text = text
-        self.base_colour = base_colour
-        self.hover_colour = hover_colour
-        self.font = pg.font.SysFont("monserrat", 20)
-        self.text_colour = text_colour
-        self.text_surf = self.font.render(self.text, True, self.text_colour)
-        self.text_rect = self.text_surf.get_rect(center = self.rect.center)
-        self.current_colour = self.base_colour
-    def draw(self, screen):
-        mouse_pos = pg.mouse.get_pos()
-        if self.rect.collidepoint(mouse_pos):
-            self.current_colour = self.hover_colour
-        else:
-            self.current_colour = self.base_colour
-        pg.draw.rect(screen, self.current_colour, self.rect, border_radius = 3)
-        screen.blit(self.text_surf, self.text_rect)
-    def is_clicked(self, event):
-        if event.type == pg.MOUSEBUTTONDOWN and event.button == 1:
-            if self.rect.collidepoint(event.pos):
-                return True
-            else:
-                return False
+import menu
+import winner
 
 pg.init()
 screen = pg.display.set_mode((800, 800))
@@ -55,16 +32,20 @@ ship23_2 = ships.Ship(450, 250, 3)
 ship24_1 = ships.Ship(550, 250, 4)
 field_p2.ships = [ship21_1, ship21_2, ship21_3, ship21_4, ship22_1, ship22_2, ship22_3, ship23_1, ship23_2, ship24_1]
 
-button_to_2 = Button(300, 700, 150, 30, 'CYAN','LIGHTBLUE',
-                'next player\'s field', 'BLACK')
-button_to_game = Button(300, 700, 150, 30, 'CYAN','LIGHTBLUE',
-                'Start the Game', 'BLACK')
-current_scene = '1st player'
+button_to_2 = menu.Button(300, 700, 'NEXT PLAYER')
+button_to_game = menu.Button(300, 700, 'START')
+button_menu_game = menu.Button(290, 110, "PLAY")
+button_finish_menu= menu.Button(290, 195, "CLOSE")
+button_finish_winner = menu.Button(300, 620, 'CLOSE')
+current_scene = 'open menu'
 fields = [field_p1, field_p2]
 
 running = True
 while running:
-    if current_scene == '1st player':
+    if current_scene == 'open menu':
+        field = None
+        ships = []
+    elif current_scene == '1st player':
         field = field_p1
         ships = field_p1.ships
     elif current_scene == '2nd player':
@@ -73,10 +54,18 @@ while running:
     elif current_scene == 'game mode':
         field = None
         ships = []
+    elif current_scene == 'game over':
+        field = None
+        ships = []
     for event in pg.event.get():
         if event.type == pg.QUIT:
             running = False
-        if current_scene == '1st player' and button_to_2.is_clicked(event):
+        if current_scene == "open menu":
+            if button_menu_game.is_clicked(event):
+                current_scene = "1st player"
+            elif button_finish_menu.is_clicked(event):
+                running = False
+        elif current_scene == '1st player' and button_to_2.is_clicked(event):
             current_scene = '2nd player'
         elif current_scene == '2nd player' and button_to_game.is_clicked(event):
             field_p1.x, field_p1.y = 50, 200
@@ -85,11 +74,46 @@ while running:
         if current_scene == 'game mode' and event.type == pg.MOUSEBUTTONDOWN and event.button == 3:
             field_p1.shot(event.pos)
             field_p2.shot(event.pos)
+            if field_p1.check():
+                current_scene = 'game over for 1'
+            elif field_p2.check():
+                current_scene = 'game over for 2'
+        if current_scene == 'game over for 1':
+            if event.type == pg.MOUSEBUTTONDOWN and event.button == 1:
+                if button_to_game.is_clicked(event):
+                    current_scene == 'open menu'
+                if button_finish_winner.is_clicked(event):
+                    running = False
+        elif current_scene == 'game over for 2':
+            if event.type == pg.MOUSEBUTTONDOWN and event.button == 1:
+                if button_to_game.is_clicked(event):
+                    current_scene == 'open menu'
+                if button_finish_winner.is_clicked(event):
+                    running = False
         for ship in ships:
             ship.drag(event)
             ship.turn(event)
-    screen.fill("WHITE")
-    if current_scene == '1st player':
+
+    menu.draw_background(screen)
+    menu.draw_mine(100, 470)
+    menu.draw_mine(300, 530)
+    menu.draw_mine(520, 500)
+    menu.draw_mine(700, 450)
+    menu.draw_mine(750, 550)
+    menu.draw_mine(400, 620)
+    menu.draw_mine(300, 700)
+    menu.draw_mine(100, 670)
+    menu.draw_mine(700, 720)
+    menu.draw_mine(620, 600)
+    if current_scene == 'open menu':
+        menu.title_text = menu.font.render("ГОЛОВНЕ МЕНЮ", True, menu.DEEP_PURPLE)
+        menu.screen.blit(menu.title_text, (210, 25))
+        menu.draw_dreadnought_front(400, menu.HORIZON_Y + 5)
+        menu.draw_dreadnought_side(160, menu.HORIZON_Y + 5, False)
+        menu.draw_dreadnought_side(640, menu.HORIZON_Y + 5, True)
+        button_menu_game.draw(screen)
+        button_finish_menu.draw(screen)
+    elif current_scene == '1st player':
         field_p1.draw(screen)
         for ship in field_p1.ships:
             ship.draw(screen)
@@ -102,5 +126,30 @@ while running:
     elif current_scene == 'game mode':
         for field in fields:
             field.draw(screen)
+    elif current_scene == 'game over for 1':
+        t1 = winner.font.render("WINNER", True, winner.DEEP_PURPLE)
+        t2 = winner.sub_font.render("PLAYER 2", True, winner.DEEP_PURPLE)
+        screen.blit(t1, (winner.SCREEN_WIDTH // 2 - t1.get_width() // 2, 15))
+        screen.blit(t2, (winner.SCREEN_WIDTH // 2 - t2.get_width() // 2, 85))
+        winner.draw_curved_firework(135, 220, 95)
+        winner.draw_curved_firework(665, 220, 95)
+        winner.draw_dreadnought_side(130, winner.HORIZON_Y + 5, False)
+        winner.draw_dreadnought_side(670, winner.HORIZON_Y + 5, True)
+        winner.draw_tk_hamster(400, winner.HORIZON_Y + 15)
+        button_finish_winner.draw(screen)
+        button_to_game.draw(screen)
+    elif current_scene == 'game over for 2':
+        t1 = winner.font.render("WINNER", True, winner.DEEP_PURPLE)
+        t2 = winner.sub_font.render("PLAYER 1", True, winner.DEEP_PURPLE)
+        screen.blit(t1, (winner.SCREEN_WIDTH // 2 - t1.get_width() // 2, 15))
+        screen.blit(t2, (winner.SCREEN_WIDTH // 2 - t2.get_width() // 2, 85))
+        winner.draw_curved_firework(135, 220, 95)
+        winner.draw_curved_firework(665, 220, 95)
+        winner.draw_dreadnought_side(130, winner.HORIZON_Y + 5, False)
+        winner.draw_dreadnought_side(670, winner.HORIZON_Y + 5, True)
+        winner.draw_tk_hamster(400, winner.HORIZON_Y + 15)
+        button_finish_winner.draw(screen)
+        button_to_game.draw(screen)
+
     pg.display.update()
 pg.quit()
