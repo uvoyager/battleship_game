@@ -3,7 +3,7 @@ import math
 pygame.init()
 
 SCREEN_WIDTH = 800
-SCREEN_HEIGHT = 600
+SCREEN_HEIGHT = 800
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("Winner")
 
@@ -134,42 +134,4 @@ def draw_tk_hamster(cx, cy):
     draw_oval(BLACK, 285, 390, 375, 480, 2)
     draw_oval(CHEEK_PINK, 425, 390, 515, 480);
     draw_oval(BLACK, 425, 390, 515, 480, 2)
-class Button:
-    def __init__(self, x, y, text):
-        self.rect = pygame.Rect(x, y, 250, 60)
-        self.text = text
-        self.hover = False
-    def draw(self, surface):
-        color = BTN_HOVER if self.hover else BTN_BLUE
-        pygame.draw.rect(surface, color, self.rect, border_radius=12)
-        pygame.draw.rect(surface, DEEP_PURPLE, self.rect, 3, border_radius=12)
-        txt = btn_font.render(self.text, True, DEEP_PURPLE)
-        surface.blit(txt, txt.get_rect(center=self.rect.center))
-play_btn = Button(275, 410, "ГРАТИ")
-exit_btn = Button(275, 495, "ВИХІД")
-run = True
-while run:
-    draw_background()
-    t1 = font.render("ПЕРЕМОЖЕЦЬ", True, DEEP_PURPLE)
-    t2 = sub_font.render("ГРАВЕЦЬ", True, DEEP_PURPLE)
-    screen.blit(t1, (SCREEN_WIDTH // 2 - t1.get_width() // 2, 15))
-    screen.blit(t2, (SCREEN_WIDTH // 2 - t2.get_width() // 2, 85))
-    draw_curved_firework(135, 220, 95)
-    draw_curved_firework(665, 220, 95)
-    draw_dreadnought_side(130, HORIZON_Y + 5, False)
-    draw_dreadnought_side(670, HORIZON_Y + 5, True)
-    draw_tk_hamster(400, HORIZON_Y + 15)
-    for p in [(70, 450), (180, 520), (730, 450), (620, 510)]:
-        draw_mine(p[0], p[1])
-    mouse_pos = pygame.mouse.get_pos()
-    for b in [play_btn, exit_btn]:
-        b.hover = b.rect.collidepoint(mouse_pos)
-        b.draw(screen)
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            run = False
-        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-            if play_btn.hover: print("Гра почалась!")
-            if exit_btn.hover: run = False
-    pygame.display.update()
-pygame.quit()
+
